@@ -2,6 +2,16 @@ avbareport
 ==========
 
 PHD Virtual Archive VBA Email Report Generator
+Generates an HTML email report of a PHD Virtual Archive VBA report history.
+
+Provides:
+
+* VM Name
+* Backup Time
+* Queued
+* Started
+* Ended
+* Status
 
 Usage
 -----
