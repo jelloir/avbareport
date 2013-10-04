@@ -107,6 +107,7 @@ def main():
         report = report_gen(archive_logs)
         body = ''.join(html_table(report))
         relay_email(args.smtpserver, args.smtprecipient, args.smtpsender, args.smtpsubject, body)
+        return 0
     except Exception as e:
         try:
             raise
