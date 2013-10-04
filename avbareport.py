@@ -20,20 +20,31 @@ def report_gen(archive_logs):
     r = []
     vmname = None
     timestamp = None
-    date = None
+    qdate = None
+    sdate = None
+    edate = None
     status = None
     j = None
-    r.append(['vmname', 'date', 'status'])
+    r.append(['VM Name', 'Backup Time', 'Queued', 'Started', 'Ended', 'Status'])
     for file in archive_logs:
         for line in open(file):
             if line.startswith('vmname'):
                 vmname = line.split('=')[1].strip()
             if line.startswith('timestamp'):
-                timestamp = line.split('=')[1].strip()
-                date = datetime.fromtimestamp(int(timestamp)).strftime('%c')
+                t = line.split('=')[1].strip()
+                timestamp = datetime.fromtimestamp(int(t)).strftime('%c')
+            if line.startswith('qdate'):
+                q = line.split('=')[1].strip()
+                qdate = datetime.fromtimestamp(int(q)).strftime('%c')
+            if line.startswith('sdate'):
+                s = line.split('=')[1].strip()
+                sdate = datetime.fromtimestamp(int(s)).strftime('%c')
+            if line.startswith('edate'):
+                e = line.split('=')[1].strip()
+                edate = datetime.fromtimestamp(int(e)).strftime('%c')
             if line.startswith('status'):
                 status = line.split('=')[1].strip()
-            j = [vmname, date, status]
+            j = [vmname, timestamp, qdate, sdate, edate, status]
         r.append(j)
     return r
 
@@ -46,9 +57,10 @@ def html_table(logfiles):
             yield '</td></tr>'
       yield '</table>'
 
+
 def relay_email(smtpserver, smtprecipient, smtpsender, smtpsubject, body):
     message = Message(From=smtpsender, To=smtprecipient, Subject=smtpsubject)
-    message.Body = body
+    message.Html = body
     sender = Mailer(smtpserver)
     sender.send(message)
 
@@ -74,29 +86,33 @@ def main():
     host = platform.node()
     parser.add_argument('-s', '--smtpsubject',
         help='Email Subject',
-        default='avbareport on %s' %(host))
+        default='Archive VBA Report On %s' %(host))
 
     parser.add_argument('-a', '--reportsage',
-        help='Time in past from now to use logs files',
+        help='Age in days before now of archive logs to report on.',
         default=1)
 
     parser.add_argument('-d', '--reportdir',
         help='Location of archive history files',
-        default='/mnt/backup/VBABACKUPS/archive_history')
+        default='/dd/archive_history')
 
     """Create variables from argparse."""
     args = parser.parse_args()
 
     now = time.time()
-    age = now - 60*60*24*int(reportsage)
+    age = now - 60*60*24*int(args.reportsage)
     
     try:
-        archive_logs = return_archive_logs(reportdir, age)
+        archive_logs = return_archive_logs(args.reportdir, age)
         report = report_gen(archive_logs)
         body = ''.join(html_table(report))
-        relay_email(smtpserver, smtprecipient, smtpsender, smtpsubject, body)
+        relay_email(args.smtpserver, args.smtprecipient, args.smtpsender, args.smtpsubject, body)
     except Exception as e:
-       return 1 
+        try:
+            raise
+        finally:
+            return 1
+
 
 if __name__ == '__main__':
     sys.exit(main())
