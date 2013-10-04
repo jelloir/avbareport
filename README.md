@@ -18,7 +18,7 @@ Prerequisites
 
 The python mailer module:
 
-Can be installed on Debian based (i.e. VBA's) with:
+Can be installed on Debian based systems (i.e. VBA's) with:
 
     apt-get update
     apt-get install python-mailer
