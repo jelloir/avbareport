@@ -34,7 +34,7 @@ Usage
       -h, --help            show this help message and exit
       -e SMTPSENDER, --smtpsender SMTPSENDER
                             Sender email address (default:
-                            root@nmiavicnas02.nautilus.local)
+                            root@nfsserver.example.local)
       -r SMTPRECIPIENT, --smtprecipient SMTPRECIPIENT
                             Recipient email address, separate multiple recipients
                             with a comma (default: root)
@@ -42,7 +42,7 @@ Usage
                             SMTP server address (default: localhost)
       -s SMTPSUBJECT, --smtpsubject SMTPSUBJECT
                             Email Subject (default: Archive VBA Report On
-                            nmiavicnas02.nautilus.local)
+                            nfsserver.example.local)
       -a REPORTSAGE, --reportsage REPORTSAGE
                             Age in days before now of archive logs to report on.
                             (default: 1)
