@@ -33,17 +33,19 @@ Usage
     optional arguments:
       -h, --help            show this help message and exit
       -e SMTPSENDER, --smtpsender SMTPSENDER
-                            Sender email address (default: root@phdvb)
+                            Sender email address (default:
+                            root@nmiavicnas02.nautilus.local)
       -r SMTPRECIPIENT, --smtprecipient SMTPRECIPIENT
-                            Recipient email address (default: root)
+                            Recipient email address, separate multiple recipients
+                            with a comma (default: root)
       -t SMTPSERVER, --smtpserver SMTPSERVER
                             SMTP server address (default: localhost)
       -s SMTPSUBJECT, --smtpsubject SMTPSUBJECT
-                            Email Subject (default: Archive VBA Report On phdvb)
+                            Email Subject (default: Archive VBA Report On
+                            nmiavicnas02.nautilus.local)
       -a REPORTSAGE, --reportsage REPORTSAGE
                             Age in days before now of archive logs to report on.
                             (default: 1)
       -d REPORTDIR, --reportdir REPORTDIR
                             Location of archive history files (default:
                             /dd/archive_history)
-

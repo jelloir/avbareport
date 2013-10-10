@@ -59,7 +59,7 @@ def html_table(logfiles):
 
 
 def relay_email(smtpserver, smtprecipient, smtpsender, smtpsubject, body):
-    message = Message(From=smtpsender, To=smtprecipient, Subject=smtpsubject)
+    message = Message(From=smtpsender, To=smtprecipient.split(','), Subject=smtpsubject)
     message.Html = body
     sender = Mailer(smtpserver)
     sender.send(message)
@@ -76,7 +76,7 @@ def main():
 
     who = getpass.getuser()
     parser.add_argument('-r', '--smtprecipient',
-        help='Recipient email address',
+        help='Recipient email address, separate multiple recipients with a comma',
         default=who)
 
     parser.add_argument('-t', '--smtpserver',
@@ -103,12 +103,15 @@ def main():
     age = now - 60*60*24*int(args.reportsage)
     
     try:
+        if not os.path.isdir(args.reportdir):
+            raise Exception('Could not find %s', args.reportdir)
         archive_logs = return_archive_logs(args.reportdir, age)
         report = report_gen(archive_logs)
         body = ''.join(html_table(report))
         relay_email(args.smtpserver, args.smtprecipient, args.smtpsender, args.smtpsubject, body)
         return 0
     except Exception as e:
+        print e
         try:
             raise
         finally:
